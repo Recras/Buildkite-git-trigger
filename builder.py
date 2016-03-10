@@ -55,4 +55,4 @@ if __name__ == '__main__':
     debug = False
     if os.getenv('DEBUG'):
         debug = True
-    app.run(debug=debug, host='0.0.0.0')
+    app.run(debug=debug, host='0.0.0.0', use_reloader=False)
