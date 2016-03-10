@@ -35,17 +35,21 @@ fetched = origin.fetch()
 @app.route('/', methods=['GET', 'POST'])
 def build():
     fetched = origin.fetch()
+    output = '<ul>'
     for fetch in fetched:
-    if not fetch.flags & fetch.HEAD_UPTODATE:
-        commit = repo.commit(fetch.ref)
-        data = {
-            'commit': 'HEAD',
-            'branch': fetch.remote_ref_path,
-            'message': commit.summary,
-            'author': {'name': commit.author.name, 'email': commit.author.email}
-        }
-        requests.post(BUILDKITE_URL, json=data)
-    return 'done'
+        output += '<li>' + fetch.remote_ref_path + ' (' + fetch.flags + ')'
+        if not fetch.flags & fetch.HEAD_UPTODATE:
+            output += ' -> trigger!'
+            commit = repo.commit(fetch.ref)
+            data = {
+                'commit': 'HEAD',
+                'branch': fetch.remote_ref_path,
+                'message': commit.summary,
+                'author': {'name': commit.author.name, 'email': commit.author.email}
+            }
+            requests.post(BUILDKITE_URL, json=data)
+        output += '</li>'
+    return output + '</ul>'
 
 if __name__ == '__main__':
     app.run(debug=False, host='0.0.0.0')
