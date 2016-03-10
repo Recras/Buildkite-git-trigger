@@ -27,7 +27,7 @@ else:
     repo = git.Repo(GIT_DIR )
     if not isinstance(repo, git.Repo):
         print 'Not a valid repo'
-	exit(1)
+    exit(1)
     origin = repo.remotes.origin
 
 fetched = origin.fetch()
@@ -35,21 +35,16 @@ fetched = origin.fetch()
 @app.route('/', methods=['GET', 'POST'])
 def build():
     fetched = origin.fetch()
-   #print len(fetched)
     for fetch in fetched:
-        #print fetch.remote_ref_path
-        #print fetch.flags
-	if not fetch.flags & fetch.HEAD_UPTODATE:
-            #print repo.commit(fetch.ref).author.name
-            #print repo.commit(fetch.ref).author.email
-	    commit = repo.commit(fetch.ref)
-	    data = {
-                'commit': 'HEAD',
-                'branch': fetch.remote_ref_path,
-                'message': commit.summary,
-		'author': {'name': commit.author.name, 'email': commit.author.email}
-            }
-	    requests.post(BUILDKITE_URL, json=data)
+    if not fetch.flags & fetch.HEAD_UPTODATE:
+        commit = repo.commit(fetch.ref)
+        data = {
+            'commit': 'HEAD',
+            'branch': fetch.remote_ref_path,
+            'message': commit.summary,
+            'author': {'name': commit.author.name, 'email': commit.author.email}
+        }
+        requests.post(BUILDKITE_URL, json=data)
     return 'done'
 
 if __name__ == '__main__':
