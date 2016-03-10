@@ -32,7 +32,7 @@ else:
 
 fetched = origin.fetch()
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def build():
     fetched = origin.fetch()
    #print len(fetched)
