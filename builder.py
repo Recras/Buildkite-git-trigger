@@ -37,7 +37,7 @@ def build():
     fetched = origin.fetch()
     output = '<ul>'
     for fetch in fetched:
-        output += '<li>' + fetch.remote_ref_path + ' (' + str(fetch.flags) + ')'
+        output += '<li>' + fetch.remote_ref_path + '/' + fetch.ref + ' (' + str(fetch.flags) + ')'
         if not fetch.flags & fetch.HEAD_UPTODATE:
             output += ' -> trigger!'
             commit = repo.commit(fetch.ref)
