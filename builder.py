@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 GIT_DIR = os.getenv('GIT_DIR')
 if not GIT_DIR:
-    GIT_DIR  = "/tmp/gitdir"
+    GIT_DIR  = '/tmp/gitdir'
 
 BUILDKITE_URL = os.getenv('BUILDKITE_URL')
 if not BUILDKITE_URL:
@@ -52,4 +52,7 @@ def build():
     return output + '</ul>'
 
 if __name__ == '__main__':
-    app.run(debug=False, host='0.0.0.0')
+    debug = False
+    if os.getenv('DEBUG'):
+        debug = True
+    app.run(debug=debug, host='0.0.0.0')
